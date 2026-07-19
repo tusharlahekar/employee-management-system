@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: ems-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: ems-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/ems
+      JWT_SECRET: ${JWT_SECRET:-change_this_to_a_long_random_secret}
+      JWT_EXPIRES_IN: 1d
+      JWT_COOKIE_EXPIRES_DAYS: 1
+      CLIENT_URL: http://localhost:8080
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@ems.com}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin@12345}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+    ports:
+      - '5000:5000'
+
+  frontend:
+    build: ./frontend
+    container_name: ems-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '8080:80'
+
+volumes:
+  mongo_data:
