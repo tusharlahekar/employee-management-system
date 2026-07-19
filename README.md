@@ -3,7 +3,7 @@
 A full-stack Employee Management System with secure authentication, role-based
 access control, employee CRUD, organizational hierarchy, search/filter/sort,
 a stats dashboard with charts, CSV import, soft delete, dark mode, and Docker
-support — built for the Full Stack Developer hiring assignment.
+support.
 
 ## Tech Stack
 
